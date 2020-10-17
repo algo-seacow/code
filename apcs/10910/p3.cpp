@@ -37,7 +37,7 @@ int main() {
         for (int i = 0; i < n; i++) {
             cin >> a[i];
         }
-        update(ans, a);
+        ans = update(ans, a);
     }
 
     cout << *max_element(ans.begin(), ans.end()) << endl;
