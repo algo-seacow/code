@@ -6,12 +6,14 @@ const int MAXN = 200005;
 int n;
 int root = 0;
 vector<int> G[MAXN];
-int dp[MAXN][2];
-// dp[u][0] : not choose u
-// dp[u][1] : choose u or not choose u
+int color[MAXN];
+
+int ans[MAXN];
+set<int> S[MAXN];
 
 void init() {
     cin >> n;
+    for (int i = 0; i < n; i++) cin >> color[i];
     for (int i = 0; i < n - 1; i++) {
         int u, v;
         cin >> u >> v;
@@ -21,21 +23,21 @@ void init() {
     }
 }
 
+void merge(set<int> &a, set<int> &b) {
+    if (a.size() < b.size()) swap(a, b);
+    for (int x : b) a.insert(x);
+    b.clear();
+}
+
 void dfs(int u, int par) {
-    dp[u][0] = 0;
+    S[u].insert(color[u]);
     for (int i = 0; i < (int)G[u].size(); i++) {
         int v = G[u][i];
         if (v == par) continue;
         dfs(v, u);
-        dp[u][0] += dp[v][1];
+        merge(S[u], S[v]);
     }
-
-    dp[u][1] = dp[u][0];
-    for (int i = 0; i < (int)G[u].size(); i++) {
-        int v = G[u][i];
-        if (v == par) continue;
-        dp[u][1] = max(dp[u][1], dp[u][0] - dp[v][1] + dp[v][0] + 1);
-    }
+    ans[u] = S[u].size();
 }
 
 int main() {
@@ -44,7 +46,9 @@ int main() {
 
     init();
     dfs(root, -1);
-    cout << dp[root][1] << '\n';
+    for (int i = 0; i < n; i++) {
+        cout << ans[i] << (i == n - 1 ? "\n" : " ");
+    }
 
     return 0;
 }
