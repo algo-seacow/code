@@ -23,27 +23,31 @@ long long len2(Point u, Point v) {
 
 long long ClosestDistance(vector<Point> p) {
     int n = p.size();
-    sort(p.begin(), p.end());
+    sort(p.begin(), p.end(), [](Point a, Point b) {
+        if (a.y != b.y) return a.y < b.y;
+        return a.x < b.x;
+    });
     set<Point> S;
     long long D2 = 8e18;
     for (int l = 0, r = 0; r < n; r++) {
         while (l < r && sqr(p[r].x - p[l].x) > D2) {
-            S.erase({p[l].y, p[l].x});
+            S.erase({p[l].x, p[l].y});
             l++;
         }
-        Point q{p[r].y, p[r].x};
-        for (auto it = S.lower_bound(q); it != S.end(); it++) {
-            D2 = min(D2, len2(q, *it));
-            if (sqr(it->x - q.x) > D2) break;
+        Point now = p[r];
+        auto it = S.lower_bound(now);
+        for (int i = 0; i < 4; i++) {
+            if (it == S.end()) break;
+            D2 = min(D2, len2(now, *it));
+            it++;
         }
-        for (auto it = S.lower_bound(q);; it--) {
-            if (S.size() == 0) break;
-            if (it == S.end()) continue;
-            D2 = min(D2, len2(q, *it));
-            if (*it < q && sqr(it->x - q.x) > D2) break;
+        it = S.lower_bound(now);
+        for (int i = 0; i < 4; i++) {
             if (it == S.begin()) break;
+            it--;
+            D2 = min(D2, len2(now, *it));
         }
-        S.insert(q);
+        S.insert(now);
     }
     return D2;
 }
