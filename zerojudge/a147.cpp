@@ -1,19 +1,20 @@
-#include <cstdlib>
-#include <iostream>
-
+#include <bits/stdc++.h>
 using namespace std;
 
-int main(int argc, char *argv[]) {
-    int in0;
-    while (cin >> in0) {
-        if (in0 == 0) return EXIT_SUCCESS;
-        for (int i = 1; i < in0; i++) {
-            // cout << (i%7==0?" ": "i" ) ;
+int main() {
+    cin.tie(0);
+    cin.sync_with_stdio(0);
+
+    int n;
+    while (cin >> n) {
+        if (n == 0) break;
+        for (int i = 1; i < n; i++) {
             if (i % 7 != 0) {
                 cout << i << " ";
             }
         }
         cout << endl;
     }
-    return EXIT_SUCCESS;
+
+    return 0;
 }
